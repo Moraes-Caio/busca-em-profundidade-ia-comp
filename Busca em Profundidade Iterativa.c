@@ -5,7 +5,7 @@
 #define TAM 100
 
 // ---------------------------------------------------------
-// Verifica se o número é primo
+// Verifica se o nÃºmero Ã© primo
 // ---------------------------------------------------------
 int ehPrimo(int x)
 {
@@ -27,7 +27,7 @@ int ehPrimo(int x)
 }
 
 // ---------------------------------------------------------
-// Mostra a identação de acordo com o nível
+// Mostra a identaÃ§Ã£o de acordo com o nÃ­vel
 // ---------------------------------------------------------
 void mostrarNivel(int nivel)
 {
