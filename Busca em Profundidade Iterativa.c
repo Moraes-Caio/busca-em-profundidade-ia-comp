@@ -145,11 +145,7 @@ int main()
                     pilha[nivel + 1] = estado - 5;
                     filho[nivel + 1] = 0;
 
-                    printf("\n\nEstado %d -> %d - 5 = %d",
-                           estado,
-                           estado,
-                           pilha[nivel + 1]);
-
+                    printf("\n\nEstado %d -> %d - 5 = %d", estado, estado, pilha[nivel + 1]);
                     printf("\n\nPILHA");
 
                     for (j = limiteAtual; j >= 0; j--)
@@ -174,10 +170,7 @@ int main()
                     pilha[nivel + 1] = estado + 2;
                     filho[nivel + 1] = 0;
 
-                    printf("\n\nEstado %d -> %d + 2 = %d",
-                           estado,
-                           estado,
-                           pilha[nivel + 1]);
+                    printf("\n\nEstado %d -> %d + 2 = %d", estado, estado, pilha[nivel + 1]);
 
                     printf("\n\nPILHA");
 
