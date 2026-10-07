@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <locale.h>
-
 #define TAM 100
 
 int main()
