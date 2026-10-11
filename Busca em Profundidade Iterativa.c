@@ -101,12 +101,7 @@ int main()
                 printf("\nNivel = %d", nivel);
 
                 printf("\n\nCAMINHO ENCONTRADO");
-
-                for (i = 0; i <= nivel; i++)
-                {
-                    printf("\n[%d] = %d", i, pilha[i]);
-                }
-
+                
                 encontrado = 1;
                 break;
             }
