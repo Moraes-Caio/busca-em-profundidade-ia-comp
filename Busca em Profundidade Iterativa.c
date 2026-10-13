@@ -17,25 +17,45 @@ int main()
 
     printf("\n\n-------------------------------------------------------------------------");
 
-    printf("\n\nDigite o estado inicial (1-100): ");
-    scanf("%d", &estadoInicial);
-
-    if (estadoInicial < 1 || estadoInicial > 100)
+    do
     {
-        printf("\n\nEstado inicial invalido!");
-        return 1;
-    }
+        printf("\n\nDigite o estado inicial (1-100): ");
+    
+        if (scanf("%d", &estadoInicial) != 1)
+        {
+            printf("\nDigite apenas numeros!");
+            while (getchar() != '\n');   
+            estadoInicial = 0;           
+        }
+        else
+        {
+            if (estadoInicial < 1 || estadoInicial > 100)
+            {
+            printf("\nEstado inicial invalido! Digite de 1 a 100.");
+            }
+        }
+    } while (estadoInicial < 1 || estadoInicial > 100);
 
     printf("\n\n-------------------------------------------------------------------------");
 
-    printf("\n\nDigite o limite maximo: ");
-    scanf("%d", &limite);
-
-    if (limite < 0 || limite >= TAM)
+    do
     {
-        printf("\n\nLimite invalido!");
-        return 1;
-    }
+        printf("\n\nDigite o limite maximo: ");
+    
+        if (scanf("%d", &limite) != 1)
+        {
+            printf("\nDigite apenas numeros!");
+            while (getchar() != '\n');
+            limite = -1;
+        }
+        else 
+        {
+            if (limite < 0 || limite >= TAM)
+            {
+                printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
+            }
+        }
+    } while (limite < 0 || limite >= TAM);
 
     printf("\n\n-------------------------------------------------------------------------");
 
@@ -116,7 +136,7 @@ int main()
                 {
                     printf("\n\n-------------------------------------------------------------------------");
                     printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
-                    printf("\nVoltando para o no: %d", pilha[nivel - 1]);
+                    printf("\nVoltando para o nó: %d", pilha[nivel - 1]);
                     printf("\nExplorando o restante do nivel %d", nivel);
                     printf("\n-------------------------------------------------------------------------");
                 }
@@ -187,7 +207,7 @@ int main()
                 printf("\n\n-------------------------------------------------------------------------");
                 printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
                 printf("\nVoltando para o no: %d", pilha[nivel - 1]);
-                printf("\nNao ha mais filhos para explorar no no: %d", estado);
+                printf("\nNao ha mais filhos para explorar no nó: %d", estado);
                 printf("\n-------------------------------------------------------------------------");
             }
 
