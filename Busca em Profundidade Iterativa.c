@@ -5,7 +5,11 @@
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
-
+    
+    //  pilha[]  = caminho atual (base no indice 0, topo em 'nivel')
+    //  filho[]  = quantos filhos de cada nivel ja foram tentados (0, 1 ou 2)
+    //  nivel    = profundidade atual (onde esta o topo da pilha)
+    
     int i, j;
     int estadoInicial;
     int limite;
@@ -16,49 +20,43 @@ int main()
     int filho[TAM];
 
     printf("\n\n-------------------------------------------------------------------------");
-
+    
     do
     {
         printf("\n\nDigite o estado inicial (1-100): ");
-    
+
         if (scanf("%d", &estadoInicial) != 1)
         {
             printf("\nDigite apenas numeros!");
-            while (getchar() != '\n');   
-            estadoInicial = 0;           
+            while (getchar() != '\n');
+            estadoInicial = 0;
         }
-        else
+        else if (estadoInicial < 1 || estadoInicial > 100)
         {
-            if (estadoInicial < 1 || estadoInicial > 100)
-            {
             printf("\nEstado inicial invalido! Digite de 1 a 100.");
-            }
         }
     } while (estadoInicial < 1 || estadoInicial > 100);
 
     printf("\n\n-------------------------------------------------------------------------");
-
+    
     do
     {
         printf("\n\nDigite o limite maximo: ");
-    
+
         if (scanf("%d", &limite) != 1)
         {
             printf("\nDigite apenas numeros!");
             while (getchar() != '\n');
             limite = -1;
         }
-        else 
+        else if (limite < 0 || limite >= TAM)
         {
-            if (limite < 0 || limite >= TAM)
-            {
-                printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
-            }
+            printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
         }
     } while (limite < 0 || limite >= TAM);
 
     printf("\n\n-------------------------------------------------------------------------");
-
+    
     printf("\n\nESTADO INICIAL = %d", estadoInicial);
     printf("\nLIMITE MAXIMO = %d", limite);
 
@@ -68,6 +66,7 @@ int main()
 
         printf("\n\nBUSCA COM LIMITE = %d", limiteAtual);
 
+        // limpa a pilha e os filhos, e poe o estado inicial na base da pilha
         for (i = 0; i <= limiteAtual; i++)
         {
             pilha[i] = -1;
@@ -82,18 +81,19 @@ int main()
         {
             printf("\n[%d] = %d", i, pilha[i]);
         }
-
-        // BUSCA EM PROFUNDIDADE
+        
+        // ----------------------------------------------------------------------------------------
+        // Busca em Profundidade
 
         int nivel = 0;
 
         while (nivel >= 0)
         {
             estado = pilha[nivel];
+            
+            // Verificar se é primo ou não
 
-            // VERIFICA SE O ESTADO E PRIMO
-
-            primo = 0;
+            primo = 0;      // = 0 então não é primo
 
             int primos[25] = {
                 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
@@ -105,12 +105,12 @@ int main()
             {
                 if (estado == primos[i])
                 {
-                    primo = 1;
+                    primo = 1;    // = 1 então é primo
                     break;
                 }
             }
 
-            // OBJETIVO ENCONTRADO
+            // Objetivo Encontrado
 
             if (primo == 1)
             {
@@ -126,8 +126,8 @@ int main()
                 break;
             }
 
-            // CHEGOU NO LIMITE
-
+            // -----------------------------------------------------------------------------------------------
+            
             if (nivel == limiteAtual)
             {
                 printf("\n\nNivel %d atingiu o limite.", nivel);
@@ -136,7 +136,7 @@ int main()
                 {
                     printf("\n\n-------------------------------------------------------------------------");
                     printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
-                    printf("\nVoltando para o nó: %d", pilha[nivel - 1]);
+                    printf("\nVoltando para o no: %d", pilha[nivel - 1]);
                     printf("\nExplorando o restante do nivel %d", nivel);
                     printf("\n-------------------------------------------------------------------------");
                 }
@@ -144,12 +144,11 @@ int main()
                 pilha[nivel] = -1;
                 filho[nivel] = 0;
 
-                nivel--;
-
-                continue;
+                nivel--;  // volta um nivel na pilha(vai do filho para o pai)
+                continue;   // Volta pro inicio do while
             }
 
-            // PRIMEIRO FILHO: ESTADO - 5
+            // Filho: Estado - 5
 
             if (filho[nivel] == 0)
             {
@@ -168,13 +167,12 @@ int main()
                         printf("\n[%d] = %d", j, pilha[j]);
                     }
 
-                    nivel++;
-
-                    continue;
+                    nivel++;   // O filho vira o novo pai
+                    continue;  // Volta pro inicio do while, tendo o filho como novo pai
                 }
             }
-
-            // SEGUNDO FILHO: ESTADO + 2
+            
+            // Filho: Estado + 2
 
             if (filho[nivel] == 1)
             {
@@ -194,30 +192,28 @@ int main()
                         printf("\n[%d] = %d", j, pilha[j]);
                     }
 
-                    nivel++;
-
-                    continue;
+                    nivel++;   // O filho vira o novo pai
+                    continue;  // Volta pro inicio do while, tendo o filho como novo pai
                 }
             }
 
-            // NAO POSSUI MAIS FILHOS
+            // Não possui mais filhos(já passou pelos dois if de filhos)
 
             if (nivel > 0)
             {
                 printf("\n\n-------------------------------------------------------------------------");
                 printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
                 printf("\nVoltando para o no: %d", pilha[nivel - 1]);
-                printf("\nNao ha mais filhos para explorar no nó: %d", estado);
+                printf("\nNao ha mais filhos para explorar no no: %d", estado);
                 printf("\n-------------------------------------------------------------------------");
             }
 
             pilha[nivel] = -1;
             filho[nivel] = 0;
 
-            nivel--;
+            nivel--;   // Volta um nivel na pilha(o filho sai e voltamos para o pai)
         }
 
-        // Se encontrou, encerra as iteracoes
         if (encontrado == 1)
         {
             break;
@@ -228,7 +224,8 @@ int main()
         printf("\n\nNenhum objetivo encontrado com limite %d.", limiteAtual);
     }
 
-    // RESULTADO FINAL
+
+    // Final
 
     printf("\n\n-------------------------------------------------------------------------");
 
@@ -248,4 +245,3 @@ int main()
 
     return 0;
 }
-
