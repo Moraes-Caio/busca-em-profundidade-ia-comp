@@ -1,192 +1,251 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <locale.h>
-
 #define TAM 100
 
-// ---------------------------------------------------------
-// Verifica se o número é primo
-// ---------------------------------------------------------
-int ehPrimo(int x)
-{
-    int primos[25] = {
-        2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-        31, 37, 41, 43, 47, 53, 59, 61, 67,
-        71, 73, 79, 83, 89, 97
-    };
-
-    for (int i = 0; i < 25; i++)
-    {
-        if (primos[i] == x)
-        {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// ---------------------------------------------------------
-// Mostra a identação de acordo com o nível
-// ---------------------------------------------------------
-void mostrarNivel(int nivel)
-{
-    for (int i = 0; i < nivel; i++)
-    {
-        printf("    ");
-    }
-}
-
-// ---------------------------------------------------------
-// Busca em profundidade limitada
-// ---------------------------------------------------------
-int buscaProfundidade(int estado, int nivel, int limite)
-{
-    // Mostra o estado atual
-    mostrarNivel(nivel);
-    printf("Nivel %d -> Estado: %d\n", nivel, estado);
-
-    // Verifica se encontrou o objetivo
-    if (ehPrimo(estado))
-    {
-        mostrarNivel(nivel);
-        printf("*** OBJETIVO ENCONTRADO: %d ***\n", estado);
-
-        return 1;
-    }
-
-    // -----------------------------------------------------
-    // Verifica se chegou ao limite
-    // -----------------------------------------------------
-    if (nivel == limite)
-    {
-        mostrarNivel(nivel);
-        printf(">>> LIMITE %d ATINGIDO <<<\n", limite);
-
-        return 0;
-    }
-
-    // -----------------------------------------------------
-    // Primeiro filho: estado - 5
-    // -----------------------------------------------------
-    if (estado - 5 > 0)
-    {
-        mostrarNivel(nivel);
-        printf("\nMudando para o Estado: %d - 5 = %d\n",
-               estado, estado - 5);
-
-        if (buscaProfundidade(estado - 5,nivel + 1,limite))
-        {
-            return 1;
-        }
-
-        // Voltou do primeiro filho
-        mostrarNivel(nivel);
-        printf("\n<<< RETORNANDO para o estado %d <<<\n",
-               estado);
-    }
-
-    // -----------------------------------------------------
-    // Segundo filho: estado + 2
-    // -----------------------------------------------------
-    if (estado + 2 <= 100)
-    {
-        mostrarNivel(nivel);
-        printf("\nMudando para o Estado: %d + 2 = %d\n",
-               estado, estado + 2);
-
-        if (buscaProfundidade(estado + 2,nivel + 1,limite))
-        {
-            return 1;
-        }
-
-        // Voltou do segundo filho
-        mostrarNivel(nivel);
-        printf("\n<<< RETORNANDO para o estado %d <<<\n",
-               estado);
-    }
-
-    return 0;
-}
-
-// ---------------------------------------------------------
-// Busca em profundidade limitada iterativa
-// ---------------------------------------------------------
-int buscaIterativa(int estadoInicial, int limiteMaximo)
-{
-    int limite;
-
-    for (limite = 0; limite <= limiteMaximo; limite++)
-    {
-        printf("\n\n");
-        printf("==================================================\n");
-        printf("        NOVA ITERACAO - LIMITE = %d\n", limite);
-        printf("==================================================\n\n");
-
-        if (buscaProfundidade(estadoInicial,0,limite))
-        {
-            printf("\nSolucao encontrada com limite %d!\n",
-                   limite);
-
-            return 1;
-        }
-
-        printf("\n");
-        printf("--------------------------------------------------\n");
-        printf("Fim da busca com limite %d.\n", limite);
-        printf("Aumentando o limite...\n");
-        printf("--------------------------------------------------\n");
-    }
-
-    return 0;
-}
-
-// ---------------------------------------------------------
-// Programa principal
-// ---------------------------------------------------------
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
+    int i, j;
     int estadoInicial;
-    int limiteMaximo;
+    int limite;
+    int estado;
+    int encontrado = 0;
+    int primo;
+    int pilha[TAM];
+    int filho[TAM];
+
+    printf("\n\n-------------------------------------------------------------------------");
+
+    do
+    {
+        printf("\n\nDigite o estado inicial (1-100): ");
+    
+        if (scanf("%d", &estadoInicial) != 1)
+        {
+            printf("\nDigite apenas numeros!");
+            while (getchar() != '\n');   
+            estadoInicial = 0;           
+        }
+        else
+        {
+            if (estadoInicial < 1 || estadoInicial > 100)
+            {
+            printf("\nEstado inicial invalido! Digite de 1 a 100.");
+            }
+        }
+    } while (estadoInicial < 1 || estadoInicial > 100);
+
+    printf("\n\n-------------------------------------------------------------------------");
+
+    do
+    {
+        printf("\n\nDigite o limite maximo: ");
+    
+        if (scanf("%d", &limite) != 1)
+        {
+            printf("\nDigite apenas numeros!");
+            while (getchar() != '\n');
+            limite = -1;
+        }
+        else 
+        {
+            if (limite < 0 || limite >= TAM)
+            {
+                printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
+            }
+        }
+    } while (limite < 0 || limite >= TAM);
+
+    printf("\n\n-------------------------------------------------------------------------");
+
+    printf("\n\nESTADO INICIAL = %d", estadoInicial);
+    printf("\nLIMITE MAXIMO = %d", limite);
+
+    for (int limiteAtual = 0; limiteAtual <= limite; limiteAtual++)
+    {
+        printf("\n\n-------------------------------------------------------------------------");
+
+        printf("\n\nBUSCA COM LIMITE = %d", limiteAtual);
+
+        for (i = 0; i <= limiteAtual; i++)
+        {
+            pilha[i] = -1;
+            filho[i] = 0;
+        }
+
+        pilha[0] = estadoInicial;
+
+        printf("\n\nPILHA INICIAL");
+
+        for (i = limiteAtual; i >= 0; i--)
+        {
+            printf("\n[%d] = %d", i, pilha[i]);
+        }
+
+        // BUSCA EM PROFUNDIDADE
+
+        int nivel = 0;
+
+        while (nivel >= 0)
+        {
+            estado = pilha[nivel];
+
+            // VERIFICA SE O ESTADO E PRIMO
+
+            primo = 0;
+
+            int primos[25] = {
+                2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+                31, 37, 41, 43, 47, 53, 59, 61, 67,
+                71, 73, 79, 83, 89, 97
+            };
+
+            for (i = 0; i < 25; i++)
+            {
+                if (estado == primos[i])
+                {
+                    primo = 1;
+                    break;
+                }
+            }
+
+            // OBJETIVO ENCONTRADO
+
+            if (primo == 1)
+            {
+                printf("\n\n-------------------------------------------------------------------------");
+
+                printf("\n\nOBJETIVO ENCONTRADO!");
+                printf("\nEstado = %d", estado);
+                printf("\nNivel = %d", nivel);
+
+                printf("\n\nCAMINHO ENCONTRADO");
+                
+                encontrado = 1;
+                break;
+            }
+
+            // CHEGOU NO LIMITE
+
+            if (nivel == limiteAtual)
+            {
+                printf("\n\nNivel %d atingiu o limite.", nivel);
+
+                if (nivel > 0)
+                {
+                    printf("\n\n-------------------------------------------------------------------------");
+                    printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
+                    printf("\nVoltando para o nó: %d", pilha[nivel - 1]);
+                    printf("\nExplorando o restante do nivel %d", nivel);
+                    printf("\n-------------------------------------------------------------------------");
+                }
+
+                pilha[nivel] = -1;
+                filho[nivel] = 0;
+
+                nivel--;
+
+                continue;
+            }
+
+            // PRIMEIRO FILHO: ESTADO - 5
+
+            if (filho[nivel] == 0)
+            {
+                filho[nivel] = 1;
+
+                if (estado - 5 > 0)
+                {
+                    pilha[nivel + 1] = estado - 5;
+                    filho[nivel + 1] = 0;
+
+                    printf("\n\nEstado %d -> %d - 5 = %d", estado, estado, pilha[nivel + 1]);
+                    printf("\n\nPILHA");
+
+                    for (j = limiteAtual; j >= 0; j--)
+                    {
+                        printf("\n[%d] = %d", j, pilha[j]);
+                    }
+
+                    nivel++;
+
+                    continue;
+                }
+            }
+
+            // SEGUNDO FILHO: ESTADO + 2
+
+            if (filho[nivel] == 1)
+            {
+                filho[nivel] = 2;
+
+                if (estado + 2 <= 100)
+                {
+                    pilha[nivel + 1] = estado + 2;
+                    filho[nivel + 1] = 0;
+
+                    printf("\n\nEstado %d -> %d + 2 = %d", estado, estado, pilha[nivel + 1]);
+
+                    printf("\n\nPILHA");
+
+                    for (j = limiteAtual; j >= 0; j--)
+                    {
+                        printf("\n[%d] = %d", j, pilha[j]);
+                    }
+
+                    nivel++;
+
+                    continue;
+                }
+            }
+
+            // NAO POSSUI MAIS FILHOS
+
+            if (nivel > 0)
+            {
+                printf("\n\n-------------------------------------------------------------------------");
+                printf("\n<<< RETORNANDO AO NIVEL %d >>>", nivel - 1);
+                printf("\nVoltando para o no: %d", pilha[nivel - 1]);
+                printf("\nNao ha mais filhos para explorar no nó: %d", estado);
+                printf("\n-------------------------------------------------------------------------");
+            }
+
+            pilha[nivel] = -1;
+            filho[nivel] = 0;
+
+            nivel--;
+        }
+
+        // Se encontrou, encerra as iteracoes
+        if (encontrado == 1)
+        {
+            break;
+        }
+
+        printf("\n\n-------------------------------------------------------------------------");
+
+        printf("\n\nNenhum objetivo encontrado com limite %d.", limiteAtual);
+    }
+
+    // RESULTADO FINAL
+
+    printf("\n\n-------------------------------------------------------------------------");
+
+    if (encontrado == 1)
+    {
+        printf("\n\nBUSCA FINALIZADA COM SUCESSO!");
+    }
+    else
+    {
+        printf("\n\nNENHUMA SOLUCAO ENCONTRADA.");
+        printf("\nLimite maximo utilizado: %d", limite);
+    }
+
+    printf("\n\n-------------------------------------------------------------------------");
 
     printf("\n\n");
-    printf("==================================================\n");
-    printf("     BUSCA EM PROFUNDIDADE LIMITADA ITERATIVA\n");
-    printf("==================================================\n");
-
-    printf("\nDigite o estado inicial (1-100): ");
-    scanf("%d", &estadoInicial);
-
-    if (estadoInicial < 1 || estadoInicial > 100)
-    {
-        printf("\nEstado inicial invalido!\n");
-        return 1;
-    }
-
-    printf("Digite o limite maximo: ");
-    scanf("%d", &limiteMaximo);
-
-    if (limiteMaximo < 0 || limiteMaximo >= TAM)
-    {
-        printf("\nLimite invalido!\n");
-        return 1;
-    }
-
-    printf("\nEstado inicial: %d", estadoInicial);
-    printf("\nLimite maximo: %d\n", limiteMaximo);
-
-    // Executa a busca
-    if (!buscaIterativa(estadoInicial,limiteMaximo))
-    {
-        printf("\n");
-        printf("==================================================\n");
-        printf("Nenhuma solucao encontrada dentro do limite.\n");
-        printf("==================================================\n");
-    }
-
-    printf("\n");
 
     return 0;
 }
+
