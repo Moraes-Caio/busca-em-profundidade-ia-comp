@@ -28,9 +28,12 @@ int main()
             while (getchar() != '\n');
             estadoInicial = -1;
         }
-        else if (estadoInicial < 0 || estadoInicial > 100)
+        else
         {
-            printf("\nEstado inicial invalido! Digite de 0 a 100.");
+            if (estadoInicial < 0 || estadoInicial > 100)
+            {
+                printf("\nEstado inicial invalido! Digite de 0 a 100.");
+            }
         }
     } while (estadoInicial < 0 || estadoInicial > 100);
 
