@@ -34,23 +34,7 @@ int main()
         }
     } while (estadoInicial < 0 || estadoInicial > 100);
 
-    printf("\n\n-------------------------------------------------------------------------");
-
-    do
-    {
-        printf("\n\nDigite o limite maximo: ");
-
-        if (scanf("%d", &limite) != 1)
-        {
-            printf("\nDigite apenas numeros!");
-            while (getchar() != '\n');
-            limite = -1;
-        }
-        else if (limite < 0 || limite >= TAM)
-        {
-            printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
-        }
-    } while (limite < 0 || limite >= TAM);
+    limite = TAM - 1;
 
     printf("\n\n-------------------------------------------------------------------------");
 
@@ -112,8 +96,6 @@ int main()
                 printf("\n\nOBJETIVO ENCONTRADO!");
                 printf("\nEstado = %d", estado);
                 printf("\nNivel = %d", profundidade[nivel]);
-
-                printf("\n\nCAMINHO ENCONTRADO");
 
                 encontrado = 1;
                 break;
