@@ -1,11 +1,8 @@
 #include <stdio.h>
-#include <locale.h>
 #define TAM 20
 
 int main()
 {
-    setlocale(LC_ALL, "Portuguese");
-
     int i, j;
     int estadoInicial;
     int limite;
@@ -71,17 +68,17 @@ int main()
 
         int nivel = 0;
 
+        int primos[25] = {
+            2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+            31, 37, 41, 43, 47, 53, 59, 61, 67,
+            71, 73, 79, 83, 89, 97
+        };
+
         while (nivel >= 0)
         {
             estado = pilha[nivel];
 
             primo = 0;
-
-            int primos[25] = {
-                2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-                31, 37, 41, 43, 47, 53, 59, 61, 67,
-                71, 73, 79, 83, 89, 97
-            };
 
             for (i = 0; i < 25; i++)
             {
@@ -98,7 +95,7 @@ int main()
 
                 printf("\n\nOBJETIVO ENCONTRADO!");
                 printf("\nEstado = %d", estado);
-                printf("\nNivel = %d", profundidade[nivel]);
+                printf("\nNivel (numero de acoes) = %d", profundidade[nivel]);
 
                 encontrado = 1;
                 break;
