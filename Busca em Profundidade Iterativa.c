@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <locale.h>
-#define TAM 100
+#define TAM 20
 
 int main()
 {
@@ -13,43 +13,28 @@ int main()
     int encontrado = 0;
     int primo;
     int pilha[TAM];
+    int profundidade[TAM];
     int filho[TAM];
 
     printf("\n\n-------------------------------------------------------------------------");
 
     do
     {
-        printf("\n\nDigite o estado inicial (1-100): ");
+        printf("\n\nDigite o estado inicial (0-100): ");
 
         if (scanf("%d", &estadoInicial) != 1)
         {
             printf("\nDigite apenas numeros!");
             while (getchar() != '\n');
-            estadoInicial = 0;
+            estadoInicial = -1;
         }
-        else if (estadoInicial < 1 || estadoInicial > 100)
+        else if (estadoInicial < 0 || estadoInicial > 100)
         {
-            printf("\nEstado inicial invalido! Digite de 1 a 100.");
+            printf("\nEstado inicial invalido! Digite de 0 a 100.");
         }
-    } while (estadoInicial < 1 || estadoInicial > 100);
+    } while (estadoInicial < 0 || estadoInicial > 100);
 
-    printf("\n\n-------------------------------------------------------------------------");
-
-    do
-    {
-        printf("\n\nDigite o limite maximo: ");
-
-        if (scanf("%d", &limite) != 1)
-        {
-            printf("\nDigite apenas numeros!");
-            while (getchar() != '\n');
-            limite = -1;
-        }
-        else if (limite < 0 || limite >= TAM)
-        {
-            printf("\nLimite invalido! Digite de 0 a %d.", TAM - 1);
-        }
-    } while (limite < 0 || limite >= TAM);
+    limite = TAM - 1;
 
     printf("\n\n-------------------------------------------------------------------------");
 
@@ -65,16 +50,18 @@ int main()
         for (i = 0; i <= limiteAtual; i++)
         {
             pilha[i] = -1;
+            profundidade[i] = -1;
             filho[i] = 0;
         }
 
         pilha[0] = estadoInicial;
+        profundidade[0] = 0;
 
         printf("\n\nPILHA INICIAL");
 
         for (i = limiteAtual; i >= 0; i--)
         {
-            printf("\n[%d] = %d", i, pilha[i]);
+            printf("\n[%d] = %d (profundidade %d)", i, pilha[i], profundidade[i]);
         }
 
         // ----------------------------------------------------------------------------------------
@@ -108,9 +95,7 @@ int main()
 
                 printf("\n\nOBJETIVO ENCONTRADO!");
                 printf("\nEstado = %d", estado);
-                printf("\nNivel = %d", nivel);
-
-                printf("\n\nCAMINHO ENCONTRADO");
+                printf("\nNivel = %d", profundidade[nivel]);
 
                 encontrado = 1;
                 break;
@@ -118,9 +103,9 @@ int main()
 
             // -----------------------------------------------------------------------------------------------
 
-            if (nivel == limiteAtual)
+            if (profundidade[nivel] == limiteAtual)
             {
-                printf("\n\nNivel %d atingiu o limite.", nivel);
+                printf("\n\nNivel %d atingiu o limite.", profundidade[nivel]);
 
                 if (nivel > 0)
                 {
@@ -132,6 +117,7 @@ int main()
                 }
 
                 pilha[nivel] = -1;
+                profundidade[nivel] = -1;
                 filho[nivel] = 0;
 
                 nivel--;
@@ -142,9 +128,10 @@ int main()
             {
                 filho[nivel] = 1;
 
-                if (estado - 5 > 0)
+                if (estado - 5 >= 0)
                 {
                     pilha[nivel + 1] = estado - 5;
+                    profundidade[nivel + 1] = profundidade[nivel] + 1;
                     filho[nivel + 1] = 0;
 
                     printf("\n\nEstado %d -> %d - 5 = %d", estado, estado, pilha[nivel + 1]);
@@ -152,7 +139,7 @@ int main()
 
                     for (j = limiteAtual; j >= 0; j--)
                     {
-                        printf("\n[%d] = %d", j, pilha[j]);
+                        printf("\n[%d] = %d (profundidade %d)", j, pilha[j], profundidade[j]);
                     }
 
                     nivel++;
@@ -167,6 +154,7 @@ int main()
                 if (estado + 2 <= 100)
                 {
                     pilha[nivel + 1] = estado + 2;
+                    profundidade[nivel + 1] = profundidade[nivel] + 1;
                     filho[nivel + 1] = 0;
 
                     printf("\n\nEstado %d -> %d + 2 = %d", estado, estado, pilha[nivel + 1]);
@@ -175,7 +163,7 @@ int main()
 
                     for (j = limiteAtual; j >= 0; j--)
                     {
-                        printf("\n[%d] = %d", j, pilha[j]);
+                        printf("\n[%d] = %d (profundidade %d)", j, pilha[j], profundidade[j]);
                     }
 
                     nivel++;
@@ -193,6 +181,7 @@ int main()
             }
 
             pilha[nivel] = -1;
+            profundidade[nivel] = -1;
             filho[nivel] = 0;
 
             nivel--;
